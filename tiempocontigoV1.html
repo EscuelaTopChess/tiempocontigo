@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiempo Contigo</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Nunito and Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Base styles with gradient background */
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%);
+            transition: background-color 0.3s ease-in-out;
+        }
+        body.dark {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        }
+        h1, h2 {
+            font-family: 'Nunito', sans-serif;
+        }
+        /* Animation for the main card */
+        .card-enter {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        /* Animation for the results section */
+        .results-fade-enter {
+            animation: resultsFadeIn 0.5s ease-in-out;
+        }
+        @keyframes resultsFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        /* Dark mode styles */
+        body.dark .bg-white {
+            background-color: #334155; /* Slate-700 */
+            color: #f1f5f9; /* Slate-100 */
+        }
+        body.dark .text-gray-800 {
+            color: #f1f5f9;
+        }
+        body.dark .text-gray-500 {
+            color: #94a3b8; /* Slate-400 */
+        }
+        body.dark .text-gray-700 {
+            color: #cbd5e1; /* Slate-300 */
+        }
+        body.dark .border-gray-200 {
+            border-color: #475569; /* Slate-600 */
+        }
+        body.dark .bg-gray-200 {
+            background-color: #475569;
+            color: #f1f5f9;
+        }
+        body.dark .bg-gray-50 {
+            background-color: #334155;
+            border-color: #475569;
+        }
+        body.dark .text-gray-600 {
+            color: #cbd5e1;
+        }
+        body.dark input {
+            background-color: #475569;
+            color: #f1f5f9;
+        }
+        /* Button hover effect */
+        button:hover {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 sm:p-6 md:p-8">
+
+    <div id="main-card" class="w-full max-w-4xl bg-white rounded-3xl shadow-xl p-8 sm:p-10 text-center transform transition-transform duration-300 hover:scale-105 card-enter relative">
+        <!-- Dark Mode Toggle -->
+        <button id="darkModeToggle" class="absolute top-6 right-6 p-2 rounded-full text-gray-700 hover:bg-gray-100 transition-colors">
+            <i class="fa-solid fa-moon"></i>
+        </button>
+
+        <!-- Main title -->
+        <h1 class="text-4xl sm:text-5xl font-bold text-gray-800 mb-2">Tiempo Contigo</h1>
+        <!-- Subtitle -->
+        <p class="text-sm sm:text-base text-gray-500 mb-8">
+            Calcula el tiempo estimado que te queda con tus seres queridos.
+        </p>
+        
+        <!-- Main content container -->
+        <div class="flex flex-col lg:flex-row lg:space-x-8">
+
+            <!-- Input Section -->
+            <div class="lg:w-1/2 space-y-6 mb-8 lg:mb-0">
+                <!-- User's age input -->
+                <div>
+                    <label for="yourAge" class="flex items-center text-left text-gray-700 font-semibold mb-2">
+                        <i class="fa-solid fa-person mr-2 text-blue-500"></i> Tu edad:
+                    </label>
+                    <input type="number" id="yourAge" placeholder="Introduce tu edad" min="1" class="w-full p-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:border-blue-500 transition-colors">
+                </div>
+                
+                <!-- Other person's age input -->
+                <div>
+                    <label for="otherAge" class="flex items-center text-left text-gray-700 font-semibold mb-2">
+                        <i class="fa-solid fa-user-group mr-2 text-blue-500"></i> Edad de la otra persona:
+                    </label>
+                    <input type="number" id="otherAge" placeholder="Introduce su edad" min="1" class="w-full p-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:border-blue-500 transition-colors">
+                </div>
+
+                <!-- Weekly hours input -->
+                <div>
+                    <label for="weeklyHours" class="flex items-center text-left text-gray-700 font-semibold mb-2">
+                        <i class="fa-solid fa-clock-rotate-left mr-2 text-blue-500"></i> Horas a la semana que pasáis juntos:
+                    </label>
+                    <input type="number" id="weeklyHours" placeholder="Horas" min="0" class="w-full p-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:border-blue-500 transition-colors">
+                </div>
+
+                <!-- Action buttons -->
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mt-6">
+                    <button id="calculateButton" class="w-full p-3 bg-blue-600 text-white font-bold rounded-lg shadow-md hover:bg-blue-700 transition-all">
+                        Calcular
+                    </button>
+                    <button id="resetButton" class="w-full p-3 bg-gray-200 text-gray-700 font-bold rounded-lg shadow-md hover:bg-gray-300 transition-all">
+                        Reiniciar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="lg:w-1/2">
+                <div id="resultsDisplay" class="hidden space-y-6 results-fade-enter">
+                    <!-- Remaining time section -->
+                    <div class="w-full p-6 rounded-2xl border-2 border-gray-200 bg-gray-100 dark:bg-red-900 dark:border-red-800">
+                        <h2 class="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4">
+                            Tiempo estimado que os queda:
+                        </h2>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-center" id="timeUnitsContainer">
+                            <!-- Time units will be populated by JS -->
+                        </div>
+                        <p class="text-sm font-semibold text-gray-600 dark:text-gray-300 mt-4">
+                            Recuerda: esta cifra es solo una estimación. Su verdadero valor no está en la exactitud, sino en el recordatorio de que cada momento cuenta.
+                        </p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                            *Basado en una esperanza de vida de 83 años para España.
+                        </p>
+                    </div>
+
+                    <!-- Section for the reflection message -->
+                    <div id="reflectionMessage" class="w-full p-6 bg-gray-50 dark:bg-gray-700 rounded-2xl border-2 border-gray-100 dark:border-gray-600 mt-8">
+                        <h2 class="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+                            Un mensaje para ti
+                        </h2>
+                        <p id="reflectionText" class="text-sm sm:text-base text-gray-600 dark:text-gray-300 leading-relaxed italic">
+                            <!-- Quote will be injected here -->
+                        </p>
+                    </div>
+
+                    <!-- Copy button -->
+                    <button id="copyButton" class="w-full p-3 bg-green-500 text-white font-bold rounded-lg shadow-md hover:bg-green-600 transition-all">
+                        <i class="fa-solid fa-copy mr-2"></i> Copiar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Message Box for alerts -->
+        <div id="messageBox" class="fixed top-4 right-4 text-white px-4 py-2 rounded-lg shadow-lg transform transition-transform duration-300 -translate-x-full opacity-0 z-50">
+            <!-- Message will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <script>
+        // Get references to all necessary elements
+        const yourAgeInput = document.getElementById('yourAge');
+        const otherAgeInput = document.getElementById('otherAge');
+        const weeklyHoursInput = document.getElementById('weeklyHours');
+        const calculateButton = document.getElementById('calculateButton');
+        const resetButton = document.getElementById('resetButton');
+        const copyButton = document.getElementById('copyButton');
+        const resultsDisplay = document.getElementById('resultsDisplay');
+        const timeUnitsContainer = document.getElementById('timeUnitsContainer');
+        const reflectionMessage = document.getElementById('reflectionMessage');
+        const reflectionText = document.getElementById('reflectionText');
+        const messageBox = document.getElementById('messageBox');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.body;
+
+        // Global interval ID to manage the countdown timer
+        let countdownInterval;
+
+        // Array of inspirational quotes
+        const quotes = [
+            "El tiempo es lo más valioso que una persona puede gastar.",
+            "Valora cada instante, porque el tiempo que se va, no vuelve.",
+            "La vida no se mide en años, sino en los momentos que vivimos.",
+            "El mejor regalo que puedes hacer es tu tiempo.",
+            "No dejes para mañana los abrazos que puedes dar hoy.",
+            "El tiempo es el único regalo que dejas cuando ya no estás."
+        ];
+
+        // Function to show a temporary message
+        function showMessage(msg, type = 'error') {
+            messageBox.textContent = msg;
+            messageBox.className = `fixed top-4 right-4 text-white px-4 py-2 rounded-lg shadow-lg transform transition-transform duration-300 translate-x-0 opacity-100 z-50`;
+            messageBox.style.backgroundColor = type === 'error' ? '#ef4444' : '#22c55e'; // Red-500 or Green-500
+            setTimeout(() => {
+                messageBox.className = `fixed top-4 right-4 text-white px-4 py-2 rounded-lg shadow-lg transform transition-transform duration-300 -translate-x-full opacity-0 z-50`;
+            }, 3000);
+        }
+        
+        // Function to create a time unit element
+        function createTimeUnit(label, value) {
+            const unitDiv = document.createElement('div');
+            // Dynamically set color class based on theme
+            const isDarkMode = body.classList.contains('dark');
+            const textColorClass = isDarkMode ? 'text-red-400' : 'text-gray-700';
+
+            unitDiv.className = 'bg-white dark:bg-slate-700 p-3 sm:p-4 rounded-lg shadow-md';
+            unitDiv.innerHTML = `
+                <div class="text-xl sm:text-2xl font-bold ${textColorClass}" id="${label}Display">
+                    ${value}
+                </div>
+                <div class="text-xs sm:text-sm text-gray-500 dark:text-slate-400 mt-1">
+                    ${label}
+                </div>
+            `;
+            return unitDiv;
+        }
+
+        // Function to format total seconds into years, months, days, hours, minutes, seconds
+        function formatDetailedTime(totalSeconds) {
+            if (totalSeconds < 0) totalSeconds = 0;
+            
+            const secondsInMinute = 60;
+            const secondsInHour = 3600;
+            const secondsInDay = 86400;
+            const secondsInMonth = 2629746; // Average seconds per month
+            const secondsInYear = 31556952; // Average seconds per year
+
+            const years = Math.floor(totalSeconds / secondsInYear);
+            totalSeconds %= secondsInYear;
+            const months = Math.floor(totalSeconds / secondsInMonth);
+            totalSeconds %= secondsInMonth;
+            const days = Math.floor(totalSeconds / secondsInDay);
+            totalSeconds %= secondsInDay;
+            const hours = Math.floor(totalSeconds / secondsInHour);
+            totalSeconds %= secondsInHour;
+            const minutes = Math.floor(totalSeconds / secondsInMinute);
+            totalSeconds %= secondsInMinute;
+            const seconds = Math.floor(totalSeconds);
+
+            return { years, months, days, hours, minutes, seconds };
+        }
+
+        // Function to set values from localStorage
+        function loadSavedData() {
+            const savedYourAge = localStorage.getItem('yourAge');
+            const savedOtherAge = localStorage.getItem('otherAge');
+            const savedWeeklyHours = localStorage.getItem('weeklyHours');
+
+            if (savedYourAge) yourAgeInput.value = savedYourAge;
+            if (savedOtherAge) otherAgeInput.value = savedOtherAge;
+            if (savedWeeklyHours) weeklyHoursInput.value = savedWeeklyHours;
+        }
+
+        // Function to save values to localStorage
+        function saveInputData() {
+            localStorage.setItem('yourAge', yourAgeInput.value);
+            localStorage.setItem('otherAge', otherAgeInput.value);
+            localStorage.setItem('weeklyHours', weeklyHoursInput.value);
+        }
+
+        // Function to update the countdown every second
+        function updateCountdown(totalRemainingSeconds) {
+            const timeBreakdown = formatDetailedTime(totalRemainingSeconds);
+            
+            // Update the display for each unit
+            document.getElementById('AñosDisplay').textContent = timeBreakdown.years;
+            document.getElementById('MesesDisplay').textContent = timeBreakdown.months;
+            document.getElementById('DíasDisplay').textContent = timeBreakdown.days;
+            document.getElementById('HorasDisplay').textContent = timeBreakdown.hours;
+            document.getElementById('MinutosDisplay').textContent = timeBreakdown.minutes;
+            document.getElementById('SegundosDisplay').textContent = timeBreakdown.seconds;
+        }
+
+        // Event listener for the calculate button
+        calculateButton.addEventListener('click', () => {
+            // Clear any existing interval to prevent multiple timers
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+
+            // Get values from inputs and convert to numbers
+            const yourAge = parseFloat(yourAgeInput.value);
+            const otherAge = parseFloat(otherAgeInput.value);
+            const weeklyHours = parseFloat(weeklyHoursInput.value);
+
+            // Basic validation
+            if (isNaN(yourAge) || isNaN(otherAge) || isNaN(weeklyHours) || yourAge <= 0 || otherAge <= 0 || weeklyHours < 0) {
+                showMessage('Por favor, introduce valores válidos en todos los campos.');
+                resultsDisplay.classList.add('hidden');
+                reflectionMessage.classList.add('hidden');
+                return;
+            }
+
+            // Constants
+            const avgLifespan = 83; // Average lifespan in Spain
+            const weeksInYear = 52.14;
+
+            const yourRemainingYears = Math.max(0, avgLifespan - yourAge);
+            const otherRemainingYears = Math.max(0, avgLifespan - otherAge);
+
+            const shorterRemainingLifespan = Math.min(yourRemainingYears, otherRemainingYears);
+            
+            // Calculate remaining weeks and total seconds for the countdown
+            const remainingWeeksTogether = shorterRemainingLifespan * weeksInYear;
+            let totalRemainingSeconds = Math.floor(remainingWeeksTogether * weeklyHours * 3600);
+
+            // Clear previous units and create new ones with a unique ID for dynamic update
+            timeUnitsContainer.innerHTML = '';
+            timeUnitsContainer.appendChild(createTimeUnit('Años', 0));
+            timeUnitsContainer.appendChild(createTimeUnit('Meses', 0));
+            timeUnitsContainer.appendChild(createTimeUnit('Días', 0));
+            timeUnitsContainer.appendChild(createTimeUnit('Horas', 0));
+            timeUnitsContainer.appendChild(createTimeUnit('Minutos', 0));
+            timeUnitsContainer.appendChild(createTimeUnit('Segundos', 0));
+
+            // Select a random quote
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            reflectionText.textContent = randomQuote;
+
+            // Show the results and reflection sections with animation
+            resultsDisplay.classList.remove('hidden');
+            reflectionMessage.classList.remove('hidden');
+            resultsDisplay.classList.add('results-fade-enter');
+            
+            // Start the real-time countdown
+            updateCountdown(totalRemainingSeconds); // Initial call
+            countdownInterval = setInterval(() => {
+                totalRemainingSeconds--;
+                updateCountdown(totalRemainingSeconds);
+                if (totalRemainingSeconds <= 0) {
+                    clearInterval(countdownInterval);
+                    showMessage('¡El tiempo con esta persona ha llegado a su fin! ¡Es hora de empezar a valorar el tiempo que te queda con la siguiente!', 'success');
+                }
+            }, 1000);
+
+            // Save data to localStorage
+            saveInputData();
+        });
+
+        // Event listener for the reset button
+        resetButton.addEventListener('click', () => {
+            yourAgeInput.value = '';
+            otherAgeInput.value = '';
+            weeklyHoursInput.value = '';
+            resultsDisplay.classList.add('hidden');
+            reflectionMessage.classList.add('hidden');
+            localStorage.clear(); // Clear all saved data
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+            showMessage('Campos reiniciados.', 'success');
+        });
+
+        // Event listener for the copy button
+        copyButton.addEventListener('click', () => {
+            // Get the text to copy
+            const years = document.getElementById('AñosDisplay').textContent.trim();
+            const months = document.getElementById('MesesDisplay').textContent.trim();
+            const days = document.getElementById('DíasDisplay').textContent.trim();
+            const hours = document.getElementById('HorasDisplay').textContent.trim();
+            const minutes = document.getElementById('MinutosDisplay').textContent.trim();
+            const seconds = document.getElementById('SegundosDisplay').textContent.trim();
+            
+            const timeText = `${years} años, ${months} meses, ${days} días, ${hours} horas, ${minutes} minutos, ${seconds} segundos`;
+            
+            const textToCopy = `Tiempo estimado que os queda: ${timeText}.\n\nUn mensaje para ti: ${reflectionText.textContent}`;
+
+            // Create a temporary textarea to hold the text to copy
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = textToCopy;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showMessage('Texto copiado al portapapeles!', 'success');
+                } else {
+                    showMessage('Error al copiar el texto.', 'error');
+                }
+            } catch (err) {
+                showMessage('Error al copiar el texto.', 'error');
+            } finally {
+                document.body.removeChild(tempTextArea);
+            }
+        });
+
+        // Event listener for the dark mode toggle button
+        darkModeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark');
+            const isDarkMode = body.classList.contains('dark');
+            if (isDarkMode) {
+                localStorage.setItem('theme', 'dark');
+                darkModeToggle.querySelector('i').className = 'fa-solid fa-sun';
+            } else {
+                localStorage.setItem('theme', 'light');
+                darkModeToggle.querySelector('i').className = 'fa-solid fa-moon';
+            }
+        });
+
+        // Load theme from localStorage on page load
+        if (localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark');
+            darkModeToggle.querySelector('i').className = 'fa-solid fa-sun';
+        } else {
+            darkModeToggle.querySelector('i').className = 'fa-solid fa-moon';
+        }
+
+        // Load saved data on page load
+        loadSavedData();
+    </script>
+</body>
+</html>
